@@ -18,7 +18,7 @@ class BookRepository(BookRepositoryProtocol):
             json.dump([b.to_dict() for b in books], f, indent=2)
         return book.book_id
 
-    def find_book_by_name(self, query) -> Book:
+    def find_book_by_name(self, query: str) -> list[Book]:
         return [b for b in self.get_all_books() if b.title == query]
     
     def edit_book_by_name(self, title:str, author:str, new_title:str|None=None, new_author:str|None=None) -> bool:
@@ -32,7 +32,6 @@ class BookRepository(BookRepositoryProtocol):
 
                 with open(self.filepath,'w', encoding='utf-8') as f: #update books.json
                     json.dump([b.to_dict() for b in books], f, indent=2)
-                    
                 return True
         return False
     
