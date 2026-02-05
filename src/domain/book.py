@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 import uuid
 
+
 @dataclass
 class Book:
     title: str
@@ -18,26 +19,26 @@ class Book:
     in_print: Optional[bool] = None
     sales_millions: Optional[float] = None
     last_checkout: Optional[str] = None
-    available: Optional[bool] = None
+    available: bool = True
     book_id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
     def check_out(self):
         if not self.available:
-            raise Exception('Book is already checked out.')
+            raise Exception("Book is already checked out.")
         self.available = False
-    
+
     def check_in(self):
         if self.available:
-            raise Exception('Book is already available.')
+            raise Exception("Book is already available.")
         self.available = True
 
     @classmethod
-    def from_dict(cls, data:dict) -> 'Book':
+    def from_dict(cls, data: dict) -> "Book":
         return cls(**data)
 
     def to_dict(self) -> dict:
         return {
-            "book_id":self.book_id,
+            "book_id": self.book_id,
             "title": self.title,
             "author": self.author,
             "genre": self.genre,
@@ -52,5 +53,5 @@ class Book:
             "in_print": self.in_print,
             "sales_millions": self.sales_millions,
             "last_checkout": self.last_checkout,
-            "available": self.available
+            "available": self.available,
         }

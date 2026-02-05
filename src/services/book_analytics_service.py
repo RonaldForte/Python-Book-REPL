@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from src.domain.book import Book
+from domain.book import Book
 
 # Ground rules for numpy:
 # 1. keep numpy in the service layer ONLY
@@ -33,12 +33,8 @@ class BookAnalyticsService:
         filteredBooks = np.array(books)[mask]
         # now scores is only the ratings for the filtered books. i.e. over 1000 ratings
         scores = ratings[mask]  # ratings for filtered books
-        sorted_idx = np.argsort(
-            -scores
-        )  # sort descending (highest rating first)
-        return filteredBooks[sorted_idx].tolist()[
-            :limit
-        ]  # top rated books
+        sorted_idx = np.argsort(-scores)  # sort descending (highest rating first)
+        return filteredBooks[sorted_idx].tolist()[:limit]  # top rated books
 
     # value score = rating * log(ratings_count) / price
     def value_scores(self, books: list[Book]) -> dict[str, float]:
@@ -159,3 +155,4 @@ class BookAnalyticsService:
         ]["book"]
 
         return {int(year): most_popular_book}
+
