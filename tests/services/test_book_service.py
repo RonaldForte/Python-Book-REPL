@@ -1,5 +1,6 @@
 import pytest
 import src.services.book_service as book_service
+from src.domain.book import Book
 from tests.mocks.mock_book_repository import MockBookRepo
 
 
@@ -29,3 +30,88 @@ def test_find_book_name_negative():
     with pytest.raises(TypeError) as e:
         book = svc.find_book_by_name(name)  # noqa: F841
     assert str(e.value)
+
+
+def test_add_book_positive():
+    repo = MockBookRepo([])
+    svc = book_service.BookService(repo)
+    new_book = Book(title="Dune", author="Frank Herbert")
+
+    book_id = svc.add_book(new_book)
+    books = svc.get_all_books()
+
+    assert book_id == new_book.book_id
+    assert len(books) == 1
+    assert books[0].title == "Dune"
+    assert books[0].author == "Frank Herbert"
+
+
+def test_find_book_name_positive():
+    repo = MockBookRepo([Book(title="Dune", author="Frank Herbert")])
+    svc = book_service.BookService(repo)
+
+    results = svc.find_book_by_name("Dune")
+
+    assert len(results) == 1
+    assert results[0].title == "Dune"
+    assert results[0].author == "Frank Herbert"
+
+
+def test_edit_book_by_name_positive():
+    repo = MockBookRepo([Book(title="Old Title", author="Old Author")])
+    svc = book_service.BookService(repo)
+
+    updated = svc.edit_book_by_name(
+        title="Old Title",
+        author="Old Author",
+        new_title="New Title",
+        new_author="New Author",
+    )
+
+    books = svc.get_all_books()
+
+    assert updated is True
+    assert len(books) == 1
+    assert books[0].title == "New Title"
+    assert books[0].author == "New Author"
+
+
+def test_edit_book_by_name_not_found():
+    repo = MockBookRepo([Book(title="Existing", author="Author")])
+    svc = book_service.BookService(repo)
+
+    updated = svc.edit_book_by_name(
+        title="Missing",
+        author="Author",
+        new_title="New Title",
+        new_author="New Author",
+    )
+
+    books = svc.get_all_books()
+
+    assert updated is False
+    assert len(books) == 1
+    assert books[0].title == "Existing"
+    assert books[0].author == "Author"
+
+
+def test_delete_book_by_name_positive():
+    repo = MockBookRepo([Book(title="Dune", author="Frank Herbert")])
+    svc = book_service.BookService(repo)
+
+    deleted = svc.delete_book_by_name("Dune", "Frank Herbert")
+    books = svc.get_all_books()
+
+    assert deleted is True
+    assert len(books) == 0
+
+
+def test_delete_book_by_name_not_found():
+    repo = MockBookRepo([Book(title="Dune", author="Frank Herbert")])
+    svc = book_service.BookService(repo)
+
+    deleted = svc.delete_book_by_name("Missing", "Author")
+    books = svc.get_all_books()
+
+    assert deleted is False
+    assert len(books) == 1
