@@ -1,13 +1,13 @@
-from services.book_analytics_service import BookAnalyticsService
-from services import generate_books, generate_bad_books
-from domain.book import Book
-from services.book_service import BookService
-from services.book_circulation_service import BookCirculationService
-from repositories.book_repository import BookRepository
-from repositories.circulation_repository import CirculationRepository
-from services.book_analytics_service import BookAnalyticsService
-from services.book_cleaning_service import BookCleaningService
-from services.book_visualization_service import BookVisualization
+from src.services.book_analytics_service import BookAnalyticsService
+from src.services import generate_books, generate_bad_books
+from src.domain.book import Book
+from src.services.book_service import BookService
+from src.services.book_circulation_service import BookCirculationService
+from src.repositories.book_repository import BookRepository
+from src.repositories.circulation_repository import CirculationRepository
+from src.services.book_analytics_service import BookAnalyticsService
+from src.services.book_cleaning_service import BookCleaningService
+from src.services.book_visualization_service import BookVisualization
 import requests
 
 

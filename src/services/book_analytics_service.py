@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from domain.book import Book
+from src.domain.book import Book
 
 # Ground rules for numpy:
 # 1. keep numpy in the service layer ONLY
@@ -68,8 +68,13 @@ class BookAnalyticsService:
         result = {}
 
         for genre, books_in_genre in genre_books.items():
-            # Extract prices for this genre into a numpy array
-            prices = np.array([b.price_usd for b in books_in_genre])
+            # Extract prices for this genre into a numpy array, skipping missing values
+            prices = np.array(
+                [b.price_usd for b in books_in_genre if b.price_usd is not None],
+                dtype=float,
+            )
+            if prices.size == 0:
+                continue
             median_price = float(np.median(prices))
             result[genre] = median_price
             # np.median() handles all edge cases:
